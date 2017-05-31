@@ -41,7 +41,7 @@ struct fileTable    //文件块结构体
 
 //两级目录结构体   
 typedef struct user_file_directory  //用户文件目录文件UFD   
-{  
+{
 	fileTable *file;
 	user_file_directory *next;
 }UFD;
@@ -62,6 +62,8 @@ void userCreate()
 	if (used<MaxUser)
 	{
 		std::cout << "请输入用户名：";
+		std::cin.clear();
+		std::cin.ignore();
 		getline(std::cin, userName, '\n');
 		for (int i = 0; i<used; ++i)
 		{
@@ -172,15 +174,15 @@ int requestDist(int &startPostion, int maxLength)
 }
 
 void fileCreate(std::string fileName, int length, std::string fileKind)
-{  
+{
 	time_t rawtime;
 	int startPos;
 	UFD* p;
 	for (p = userTable[userID].user->next; p != nullptr; p = p->next)
 	{
-		if (p->file->fileName==fileName)
+		if (p->file->fileName == fileName)
 		{
-			std::cout<<"文件重名，创建文件失败"<<std::endl;
+			std::cout << "文件重名，创建文件失败" << std::endl;
 			system("pause");
 			return;
 		}
@@ -188,9 +190,9 @@ void fileCreate(std::string fileName, int length, std::string fileKind)
 	if (requestDist(startPos, length))
 	{
 		UFD *fileNode = new UFD;
-		fileNode->file =new fileTable; 
-		fileNode->file->fileName=fileName;
-		fileNode->file->fileKind=fileKind;
+		fileNode->file = new fileTable;
+		fileNode->file->fileName = fileName;
+		fileNode->file->fileKind = fileKind;
 		fileNode->file->maxlength = length;
 		fileNode->file->strat = startPos;
 		fileNode->file->openFlag = false;
@@ -210,7 +212,7 @@ void fileCreate(std::string fileName, int length, std::string fileKind)
 	}
 	else
 	{
-		std::cout << "磁盘空间已满或所创建文件超出磁盘空闲容量，磁盘空间分配失败"<< std::endl;
+		std::cout << "磁盘空间已满或所创建文件超出磁盘空闲容量，磁盘空间分配失败" << std::endl;
 		system("pause");
 	}
 }
@@ -232,7 +234,7 @@ void fileDel(std::string fileName)
 	UFD *p = q->next;
 	while (p)
 	{
-		if (p->file->fileName==fileName) 
+		if (p->file->fileName == fileName)
 			break;
 		p = p->next;
 		q = q->next;
@@ -245,7 +247,7 @@ void fileDel(std::string fileName)
 			q->next = p->next;
 			freeDisk(temp->file->strat);//磁盘空间回收   
 			free(temp);
-			std::cout<<"文件删除成功"<<std::endl;
+			std::cout << "文件删除成功" << std::endl;
 			system("pause");
 		}
 		else
@@ -267,7 +269,7 @@ void fileCat(std::string fileName)
 	UFD *q = userTable[userID].user;
 	for (p = q->next; p != nullptr; p = p->next)
 	{
-		if (p->file->fileName==fileName)
+		if (p->file->fileName == fileName)
 			break;
 	}
 	if (p)
@@ -275,14 +277,14 @@ void fileCat(std::string fileName)
 		int startPos = p->file->strat;
 		int length = p->file->length;
 		p->file->openFlag = true;//文件打开标记   
-		std::cout << "*****************************************************"<<std::endl;;
-		for (int i = startPos,k=0; k<length; ++i, ++k)
+		std::cout << "*****************************************************" << std::endl;;
+		for (int i = startPos, k = 0; k<length; ++i, ++k)
 		{
 			if (i % 50 == 0)
 				std::cout << std::endl;  //一行大于50个字符换行   
-			std::cout<<disk[i];
+			std::cout << disk[i];
 		}
-		std::cout<<std::endl<< std::endl << "*****************************************************" << std::endl;
+		std::cout << std::endl << std::endl << "*****************************************************" << std::endl;
 		std::cout << p->file->fileName << "已被read进程打开,请用close命令将其关闭" << std::endl;
 		system("pause");
 	}
@@ -300,12 +302,12 @@ void fileWrite(std::string fileName)
 	int i, k;
 	for (p = q->next; p != nullptr; p = p->next)
 	{
-		if (p->file->fileName==fileName)
+		if (p->file->fileName == fileName)
 			break;
 	}
 	if (p)
 	{
-		if (p->file->fileKind=="r")//判断文件类型   
+		if (p->file->fileKind == "r")//判断文件类型   
 		{
 			std::cout << "该文件是只读文件,写入失败" << std::endl;
 			system("pause");
@@ -341,7 +343,7 @@ void fileFine(std::string fileName)
 	UFD *q = userTable[userID].user;
 	for (p = q->next; p != nullptr; p = p->next)
 	{
-		if (p->file->fileName==fileName)
+		if (p->file->fileName == fileName)
 			break;
 	}
 	if (p)
@@ -358,7 +360,7 @@ void fileFine(std::string fileName)
 	}
 	else
 	{
-		std::cout<<"没有找到该文件,请检查输入的文件名是否正确"<<std::endl;
+		std::cout << "没有找到该文件,请检查输入的文件名是否正确" << std::endl;
 		system("pause");
 	}
 }
@@ -369,13 +371,13 @@ void chmod(std::string fileName, std::string kind)
 	UFD *q = userTable[userID].user;
 	for (p = q->next; p != nullptr; p = p->next)
 	{
-		if (p->file->fileName==fileName)
+		if (p->file->fileName == fileName)
 			break;
 	}
 	if (p)
 	{
-		p->file->fileKind=kind;
-		std::cout<<"修改文件类型成功"<<std::endl;
+		p->file->fileKind = kind;
+		std::cout << "修改文件类型成功" << std::endl;
 		system("pause");
 	}
 	else
@@ -391,22 +393,22 @@ void fileRen(std::string fileName, std::string name)
 	UFD *q = userTable[userID].user;
 	for (p = q->next; p != nullptr; p = p->next)
 	{
-		if (p->file->fileName==fileName)
+		if (p->file->fileName == fileName)
 			break;
 	}
 	if (p)
 	{
 		while (q->next)
 		{
-			if (q->next->file->fileName==name)
+			if (q->next->file->fileName == name)
 			{
-				std::cout<<"您输入的文件名已存在,重命名失败"<<std::endl;
+				std::cout << "您输入的文件名已存在,重命名失败" << std::endl;
 				system("pause");
 				return;
 			}
 			q = q->next;
 		}
-		p->file->fileName=name;
+		p->file->fileName = name;
 		std::cout << "重命名成功" << std::endl;
 		system("pause");
 	}
@@ -422,7 +424,7 @@ void fileDir(std::string userName)
 	int i, k = 0;
 	for (i = 0; i<MaxUser; ++i)
 	{
-		if (userTable[i].userName==userName)
+		if (userTable[i].userName == userName)
 		{
 			k = i;
 			break;
@@ -430,7 +432,7 @@ void fileDir(std::string userName)
 	}
 	if (i == MaxUser)
 	{
-		std::cout<<"没有找到该用户，请检查输入用户名是否正确"<<std::endl;
+		std::cout << "没有找到该用户，请检查输入用户名是否正确" << std::endl;
 		system("pause");
 		return;
 	}
@@ -446,16 +448,16 @@ void fileDir(std::string userName)
 void diskShow()
 {
 	int i = 0, unusedDisk = 0;
-	std::cout<<"***************************************************************************" << std::endl;
-	std::cout <<"  盘块号    起始地址       容量(bit)   是否已被使用" << std::endl;
+	std::cout << "***************************************************************************" << std::endl;
+	std::cout << "  盘块号    起始地址       容量(bit)   是否已被使用" << std::endl;
 	for (diskNode *p = diskHead; p != nullptr; p = p->next, ++i)
 	{
-		if (p->useFlag == false) 
+		if (p->useFlag == false)
 			unusedDisk += p->maxlength;
 		std::cout << "   " << i << "         " << p->start << "              " << p->maxlength << "          " << p->useFlag << std::endl;
 	}
 	std::cout << "***************************************************************************" << std::endl;
-	std::cout <<"磁盘空间总容量：512*1024bit  已使用："<< MaxDisk - unusedDisk<<"bit   末使用："<< unusedDisk<<"bit" << std::endl << std::endl;
+	std::cout << "磁盘空间总容量：512*1024bit  已使用：" << MaxDisk - unusedDisk << "bit   末使用：" << unusedDisk << "bit" << std::endl << std::endl;
 	system("pause");
 }
 
@@ -465,13 +467,13 @@ void fileClose(std::string fileName)
 	UFD *q = userTable[userID].user;
 	for (p = q->next; p != nullptr; p = p->next)
 	{
-		if (p->file->fileName==fileName)
+		if (p->file->fileName == fileName)
 			break;
 	}
 	if (p)
 	{
 		p->file->openFlag = false;
-		std::cout<<p->file->fileName<<"文件已关闭" << std::endl;
+		std::cout << p->file->fileName << "文件已关闭" << std::endl;
 		system("pause");
 	}
 	else
@@ -480,7 +482,7 @@ void fileClose(std::string fileName)
 		system("pause");
 	}
 }
-  
+
 
 int main()
 {
@@ -499,7 +501,7 @@ int main()
 	order[10] = "exit";
 	order[11] = "df";
 	initDisk();//初始化磁盘   
-	for (auto n = 0; n<MaxUser;++n)//初始化用户UFD目录文件的头指针   
+	for (auto n = 0; n<MaxUser; ++n)//初始化用户UFD目录文件的头指针   
 	{
 		userTable[n].user = new UFD;
 		userTable[n].user->next = nullptr;
@@ -513,13 +515,13 @@ int main()
 ********************************************
 请输入数字:>)";
 		int choice;
-		std::cin>>choice;
-		if (choice == 1) 
+		std::cin >> choice;
+		if (choice == 1)
 			userCreate();
-		else if (choice == 2) 
+		else if (choice == 2)
 			userID = login();
-		else 
-			std::cout<<"您的输入有误，请重新选择"<<std::endl;
+		else
+			std::cout << "您的输入有误，请重新选择" << std::endl;
 		while (userID != -1)
 		{
 			std::cout << R"(
@@ -541,12 +543,12 @@ int main()
 			std::string command, command_str1, command_str2, command_str3, command_str4;
 			getline(std::cin, command, '\n');
 			int select = 0;
-			int i,j;
+			int i, j;
 			for (i = 0; command[i] != ' '&&i<command.size(); ++i)//command_str1字符串存储命令的操作类型   
 				command_str1.push_back(command[i]);
 			for (j = 0; j<commandAmount; ++j)
 			{
-				if (command_str1==order[j])
+				if (command_str1 == order[j])
 				{
 					select = j;
 					break;
@@ -563,8 +565,8 @@ int main()
 			{
 			case 0:
 				for (++i; command[i] != ' '; ++i)
-					command_str3.push_back(command[i]); 
-				for (++i; command[i] != ' '&&i<command.size();++i)
+					command_str3.push_back(command[i]);
+				for (++i; command[i] != ' '&&i<command.size(); ++i)
 					command_str4.push_back(command[i]);
 				fileCreate(command_str2, StringToNum<int>(command_str3), command_str4);
 				break;
@@ -609,7 +611,7 @@ int main()
 			case 11:
 				diskShow();
 				break;
-			default: ;
+			default:;
 			}
 		}
 	}
