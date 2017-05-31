@@ -93,6 +93,8 @@ int login()
 	std::string name, psw;
 	int i;
 	std::cout << "请输入用户名:";
+	std::cin.clear();
+	std::cin.ignore();
 	getline(std::cin, name, '\n');
 	for (i = 0; i<used; i++)
 	{
